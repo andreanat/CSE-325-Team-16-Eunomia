@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CSE-325-Team-16-Eunomia")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+19c4308dabbc29a63dfe78a68d13740b63eb001b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3d66bf5322cf299040b6f987ec7e912be16ad5bc")]
 [assembly: System.Reflection.AssemblyProductAttribute("CSE-325-Team-16-Eunomia")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CSE-325-Team-16-Eunomia")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

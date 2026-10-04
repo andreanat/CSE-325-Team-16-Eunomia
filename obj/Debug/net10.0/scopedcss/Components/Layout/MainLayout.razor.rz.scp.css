@@ -12,9 +12,8 @@ main[b-38upytw8vi] {
 
 .sidebar[b-38upytw8vi] {
     width: 260px;
-    background: linear-gradient(180deg, #2a201d 0%, #3d2c26 100%);
-    border-right: 1px solid rgba(255,255,255,0.08);
-    box-shadow: inset -1px 0 0 rgba(255,255,255,0.04);
+    background: #194b3a;
+    border-right: 1px solid rgba(255,255,255,0.12);
 }
 
 .content[b-38upytw8vi] {
@@ -51,6 +50,10 @@ main[b-38upytw8vi] {
     .sidebar[b-38upytw8vi] {
         width: 100%;
     }
+
+    .content[b-38upytw8vi] {
+        padding: 1.25rem 0.75rem 2.5rem;
+    }
 }
 
 @media (min-width: 641px) {
@@ -62,5 +65,15 @@ main[b-38upytw8vi] {
         position: sticky;
         top: 0;
         height: 100vh;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+    .sidebar[b-38upytw8vi] {
+        width: 220px;
+    }
+
+    .content[b-38upytw8vi] {
+        padding-inline: 1rem;
     }
 }
