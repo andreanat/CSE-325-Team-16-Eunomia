@@ -24,6 +24,7 @@
                 <span class="summary-bottom"><strong class="summary-count">@CountByStatus("Completed")</strong><span class="summary-caption">items finished</span></span>
             </button>
         </div>
+
         <div class="col-sm-4">
             <button type="button" class="summary-tile summary-current h-100 w-100 text-start" @onclick='() => SetStatusFilter("Currently Enjoying")' aria-pressed="@(SelectedStatus == "Currently Enjoying")">
                 <span class="summary-index">02 / IN PROGRESS</span>
@@ -31,6 +32,7 @@
                 <span class="summary-bottom"><strong class="summary-count">@CountByStatus("Currently Enjoying")</strong><span class="summary-caption">in progress</span></span>
             </button>
         </div>
+
         <div class="col-sm-4">
             <button type="button" class="summary-tile summary-queued h-100 w-100 text-start" @onclick='() => SetStatusFilter("Want to Try")' aria-pressed="@(SelectedStatus == "Want to Try")">
                 <span class="summary-index">03 / ON THE LIST</span>
@@ -53,34 +55,46 @@
         <div class="row g-3 align-items-end">
                 <div class="col-12 col-sm-6 col-xl-3">
                     <label class="form-label fw-semibold" for="media-search">Search</label>
-                    <input id="media-search" class="form-control" @bind="SearchTerm" @bind:event="oninput" placeholder="Title or notes" />
+                    <input id="media-search" class="form-control" @bind="SearchTerm" @bind:event="oninput"
+                           placeholder="Title or notes" />
                 </div>
                 <div class="col-12 col-sm-6 col-xl-3">
                     <label class="form-label fw-semibold" for="category-filter">Category</label>
+
                     <select id="category-filter" class="form-select" @bind="SelectedCategory">
+
                         <option value="All">All categories</option>
+
                         @foreach (var category in Categories)
                         {
                             <option value="@category">@category</option>
                         }
+
                     </select>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-3">
                     <label class="form-label fw-semibold" for="status-filter">Status</label>
+
                     <select id="status-filter" class="form-select" @bind="SelectedStatus">
+
                         <option value="All">All statuses</option>
+
                         @foreach (var status in Statuses)
                         {
                             <option value="@status">@status</option>
                         }
+
                     </select>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-3">
                     <label class="form-label fw-semibold" for="sort-order">Sort by</label>
+
                     <select id="sort-order" class="form-select" @bind="SelectedSort">
+
                         <option value="Title">Title</option>
                         <option value="Rating">Rating</option>
                         <option value="Recently added">Recently added</option>
+
                     </select>
                 </div>
         </div>
@@ -89,17 +103,23 @@
     @if (FilteredMediaItems.Any())
     {
         <div class="row g-3">
+
             @foreach (var item in FilteredMediaItems)
             {
                 <div class="col-12 col-sm-6 col-xl-4">
                     <article class="library-card h-100">
                         <div class="library-card-body d-flex flex-column">
                             <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+
                                 <div>
                                     <p class="category-label mb-2">@item.Category <span aria-hidden="true">/</span> #@item.Id.ToString("00")</p>
                                     <h3 class="media-title mb-0">@item.Title</h3>
                                 </div>
-                                <span class="badge @StatusBadgeClass(item.Status)">@item.Status</span>
+
+                                <span class="badge @StatusBadgeClass(item.Status)">
+                                    @item.Status
+                                </span>
+
                             </div>
                             <p class="media-rating mb-3">@(item.Rating is null ? "Not rated yet" : $"Rated {item.Rating} out of 10")</p>
                             <label class="form-label small fw-semibold" for="status-@item.Id">Reading status</label>
@@ -108,23 +128,33 @@
                                 {
                                     <option value="@status">@status</option>
                                 }
+
                             </select>
                             <div class="d-flex flex-wrap gap-2 mt-auto">
                                 <button class="btn btn-sm btn-outline-secondary" @onclick="() => ShowDetails(item.Id)">View details</button>
                                 <button class="btn btn-sm btn-outline-primary" @onclick="() => EditItem(item)">Edit details</button>
                                 <button class="btn btn-sm btn-outline-danger" @onclick="() => RequestDelete(item.Id)">Delete</button>
                             </div>
+
                         </div>
+
                     </article>
+
                 </div>
             }
+
         </div>
     }
     else
     {
         <div class="border rounded p-5 text-center">
+
             <h3 class="h5">No media found</h3>
-            <p class="text-secondary mb-0">Add a title or adjust your search and filters.</p>
+
+            <p class="text-secondary mb-0">
+                Add a title or adjust your search and filters.
+            </p>
+
         </div>
     }
 
@@ -170,50 +200,122 @@
                     <button type="button" class="btn btn-outline-secondary" @onclick="CancelEdit" aria-label="Close editor">Close</button>
                 </div>
                 <EditForm Model="EditingItem" OnValidSubmit="SaveItem">
+
+                    <DataAnnotationsValidator />
+
+                    <ValidationSummary class="text-danger mb-3" />
+
                     <div class="row g-3">
+
                         <div class="col-md-6">
-                            <label class="form-label" for="item-title">Title</label>
-                            <InputText id="item-title" class="form-control" @bind-Value="EditingItem.Title" required />
+
+                            <label class="form-label" for="item-title">
+                                Title
+                            </label>
+
+                            <InputText id="item-title" class="form-control" @bind-Value="EditingItem.Title" />
+
+                            <ValidationMessage For="@(() => EditingItem.Title)" class="text-danger" />
+
                         </div>
+
                         <div class="col-md-3">
-                            <label class="form-label" for="item-category">Category</label>
+
+                            <label class="form-label" for="item-category">
+                                Category
+                            </label>
+
                             <InputSelect id="item-category" class="form-select" @bind-Value="EditingItem.Category">
+
                                 @foreach (var category in Categories)
                                 {
-                                    <option value="@category">@category</option>
+                                    <option value="@category">
+                                        @category
+                                    </option>
                                 }
+
                             </InputSelect>
+
                         </div>
+
                         <div class="col-md-3">
-                            <label class="form-label" for="item-status">Status</label>
+
+                            <label class="form-label" for="item-status">
+                                Status
+                            </label>
+
                             <InputSelect id="item-status" class="form-select" @bind-Value="EditingItem.Status">
+
                                 @foreach (var status in Statuses)
                                 {
-                                    <option value="@status">@status</option>
+                                    <option value="@status">
+                                        @status
+                                    </option>
                                 }
+
                             </InputSelect>
+
                         </div>
+
                         <div class="col-md-4">
-                            <label class="form-label" for="item-rating">Rating (1-10)</label>
-                            <InputNumber id="item-rating" class="form-control" @bind-Value="EditingItem.Rating" min="1" max="10" />
+
+                            <label class="form-label" for="item-rating">
+                                Rating (1-10)
+                            </label>
+
+                            <InputNumber id="item-rating" class="form-control" @bind-Value="EditingItem.Rating" min="1"
+                                         max="10" />
+
+                            <ValidationMessage For="@(() => EditingItem.Rating)" class="text-danger" />
+
                         </div>
+
                         <div class="col-md-4">
-                            <label class="form-label" for="item-started">Start date</label>
+
+                            <label class="form-label" for="item-started">
+                                Start date
+                            </label>
+
                             <InputDate id="item-started" class="form-control" @bind-Value="EditingItem.StartedOn" />
+
                         </div>
+
                         <div class="col-md-4">
-                            <label class="form-label" for="item-completed">Completion date</label>
+
+                            <label class="form-label" for="item-completed">
+                                Completion date
+                            </label>
+
                             <InputDate id="item-completed" class="form-control" @bind-Value="EditingItem.CompletedOn" />
+
                         </div>
+
                         <div class="col-12">
-                            <label class="form-label" for="item-notes">Notes</label>
+
+                            <label class="form-label" for="item-notes">
+                                Notes
+                            </label>
+
                             <InputTextArea id="item-notes" class="form-control" @bind-Value="EditingItem.Notes" rows="3" />
+
+                            <ValidationMessage For="@(() => EditingItem.Notes)" class="text-danger" />
+
                         </div>
+
                     </div>
+
                     <div class="d-flex gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary">Save item</button>
-                        <button type="button" class="btn btn-outline-secondary" @onclick="CancelEdit">Cancel</button>
+
+                        <button type="submit" class="btn btn-primary">
+                            Save item
+                        </button>
+
+                        <button type="button" class="btn btn-outline-secondary" @onclick="CancelEdit">
+                            Cancel
+                        </button>
+
                     </div>
+
                 </EditForm>
             </section>
         </div>
@@ -234,67 +336,140 @@
     }
 
     <section class="border-top mt-5 pt-4">
+
         <div class="row g-3 align-items-end">
+
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="active-account">Personal collection</label>
+
+                <label class="form-label fw-semibold" for="active-account">
+                    Personal collection
+                </label>
+
                 <select id="active-account" class="form-select" value="@CurrentUser.Id" @onchange="SwitchAccount">
+
                     @foreach (var account in Accounts)
                     {
-                        <option value="@account.Id">@account.Name (@account.Email)</option>
+                        <option value="@account.Id">
+                            @account.Name (@account.Email)
+                        </option>
                     }
+
                 </select>
+
             </div>
+
             <div class="col-md-6">
+
                 <button class="btn btn-outline-secondary" @onclick="ToggleAccountForm">
-                    @(IsCreatingAccount ? "Cancel" : "Create account")
+
+                    @(IsCreatingAccount
+                        ? "Cancel"
+                        : "Create account")
+
                 </button>
+
             </div>
+
         </div>
 
         @if (IsCreatingAccount)
         {
             <EditForm Model="NewAccount" OnValidSubmit="CreateAccount" class="row g-3 mt-2">
+
                 <div class="col-md-5">
-                    <label class="form-label" for="account-name">Name</label>
+
+                    <label class="form-label" for="account-name">
+                        Name
+                    </label>
+
                     <InputText id="account-name" class="form-control" @bind-Value="NewAccount.Name" required />
+
                 </div>
+
                 <div class="col-md-5">
-                    <label class="form-label" for="account-email">Email</label>
-                    <InputText id="account-email" type="email" class="form-control" @bind-Value="NewAccount.Email" required />
+
+                    <label class="form-label" for="account-email">
+                        Email
+                    </label>
+
+                    <InputText id="account-email" type="email" class="form-control" @bind-Value="NewAccount.Email"
+                               required />
+
                 </div>
+
                 <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">Create</button>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        Create
+                    </button>
+
                 </div>
+
                 <div class="col-12">
-                    <p class="small text-secondary mb-0">Demo accounts and media are kept in memory for this session only.</p>
+
+                    <p class="small text-secondary mb-0">
+                        Demo accounts and media are kept in memory for this session only.
+                    </p>
+
                 </div>
+
             </EditForm>
         }
+
     </section>
+
 </div>
 
 @code {
-    private static readonly List<string> Categories = new() { "Movies", "TV Shows", "Books", "Music", "Games" };
-    private static readonly List<string> Statuses = new() { "Completed", "Currently Enjoying", "Want to Try" };
+
+    private static readonly List<string> Categories = new()
+    {
+        "Movies",
+        "TV Shows",
+        "Books",
+        "Music",
+        "Games"
+    };
+
+    private static readonly List<string> Statuses = new()
+    {
+        "Completed",
+        "Currently Enjoying",
+        "Want to Try"
+    };
 
     private string SearchTerm = "";
+
     private string SelectedCategory = "All";
+
     private string SelectedStatus = "All";
+
     private string SelectedSort = "Title";
+
     private bool IsEditing;
+
     private bool IsCreatingAccount;
     private int? SelectedItemId;
     private int? PendingDeleteItemId;
     private int NextUserId = 2;
+
     private MediaItem EditingItem = new();
+
     private UserAccount NewAccount = new();
 
     private List<UserAccount> Accounts = new()
     {
-        new() { Id = 1, Name = "Ari Johnson", Email = "ari.johnson@eunomia.app" }
+        new()
+        {
+            Id = 1,
+            Name = "Ari Johnson",
+            Email = "ari.johnson@eunomia.app"
+        }
     };
 
-    private UserAccount CurrentUser => Accounts.Single(account => account.Id == CurrentUserId);
+    private UserAccount CurrentUser =>
+        Accounts.Single(account => account.Id == CurrentUserId);
+
     private int CurrentUserId = 1;
     private MediaItem? SelectedItem => MediaItems.FirstOrDefault(item => item.Id == SelectedItemId && item.UserId == CurrentUserId);
     private MediaItem? PendingDeleteItem => MediaItems.FirstOrDefault(item => item.Id == PendingDeleteItemId && item.UserId == CurrentUserId);
@@ -303,61 +478,114 @@
     {
         new()
         {
-            Id = 1, UserId = 1, Title = "The Horizon", Category = "Movies", Status = "Completed",
-            Rating = 9, Notes = "Brilliant world-building and a memorable ending.",
-            StartedOn = new DateTime(2026, 8, 4), CompletedOn = new DateTime(2026, 8, 5), DateAdded = new DateTime(2026, 8, 1)
+            Id = 1,
+            UserId = 1,
+            Title = "The Horizon",
+            Category = "Movies",
+            Status = "Completed",
+            Rating = 9,
+            Notes = "Brilliant world-building and a memorable ending.",
+            StartedOn = new DateTime(2026, 8, 4),
+            CompletedOn = new DateTime(2026, 8, 5),
+            DateAdded = new DateTime(2026, 8, 1)
         },
+
         new()
         {
-            Id = 2, UserId = 1, Title = "City of Echoes", Category = "TV Shows", Status = "Currently Enjoying",
-            Rating = 8, Notes = "Watching one episode each week.",
-            StartedOn = new DateTime(2026, 9, 10), DateAdded = new DateTime(2026, 9, 8)
+            Id = 2,
+            UserId = 1,
+            Title = "City of Echoes",
+            Category = "TV Shows",
+            Status = "Currently Enjoying",
+            Rating = 8,
+            Notes = "Watching one episode each week.",
+            StartedOn = new DateTime(2026, 9, 10),
+            DateAdded = new DateTime(2026, 9, 8)
         },
+
         new()
         {
-            Id = 3, UserId = 1, Title = "A Field Guide to Quiet", Category = "Books", Status = "Want to Try",
-            Notes = "Recommended by Morgan.", DateAdded = new DateTime(2026, 9, 18)
+            Id = 3,
+            UserId = 1,
+            Title = "A Field Guide to Quiet",
+            Category = "Books",
+            Status = "Want to Try",
+            Notes = "Recommended by Morgan.",
+            DateAdded = new DateTime(2026, 9, 18)
         },
+
         new()
         {
-            Id = 4, UserId = 1, Title = "Tidal Rooms", Category = "Music", Status = "Completed",
-            Rating = 7, Notes = "Return to the instrumental tracks.",
-            StartedOn = new DateTime(2026, 7, 12), CompletedOn = new DateTime(2026, 7, 12), DateAdded = new DateTime(2026, 7, 10)
+            Id = 4,
+            UserId = 1,
+            Title = "Tidal Rooms",
+            Category = "Music",
+            Status = "Completed",
+            Rating = 7,
+            Notes = "Return to the instrumental tracks.",
+            StartedOn = new DateTime(2026, 7, 12),
+            CompletedOn = new DateTime(2026, 7, 12),
+            DateAdded = new DateTime(2026, 7, 10)
         },
+
         new()
         {
-            Id = 5, UserId = 1, Title = "Lantern Vale", Category = "Games", Status = "Want to Try",
-            Notes = "Try co-op mode with friends.", DateAdded = new DateTime(2026, 9, 20)
+            Id = 5,
+            UserId = 1,
+            Title = "Lantern Vale",
+            Category = "Games",
+            Status = "Want to Try",
+            Notes = "Try co-op mode with friends.",
+            DateAdded = new DateTime(2026, 9, 20)
         }
     };
 
-    private IEnumerable<MediaItem> CurrentMediaItems => MediaItems.Where(item => item.UserId == CurrentUserId);
+    private IEnumerable<MediaItem> CurrentMediaItems =>
+        MediaItems.Where(item => item.UserId == CurrentUserId);
 
     private IEnumerable<MediaItem> FilteredMediaItems
     {
         get
         {
             var items = CurrentMediaItems
-                .Where(item => string.IsNullOrWhiteSpace(SearchTerm) ||
-                    item.Title.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase) ||
-                    item.Notes.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase))
-                .Where(item => SelectedCategory == "All" || item.Category == SelectedCategory)
-                .Where(item => SelectedStatus == "All" || item.Status == SelectedStatus);
+                .Where(item =>
+                    string.IsNullOrWhiteSpace(SearchTerm) ||
+                    item.Title.Contains(
+                        SearchTerm,
+                        StringComparison.OrdinalIgnoreCase) ||
+                    item.Notes.Contains(
+                        SearchTerm,
+                        StringComparison.OrdinalIgnoreCase))
+                .Where(item =>
+                    SelectedCategory == "All" ||
+                    item.Category == SelectedCategory)
+                .Where(item =>
+                    SelectedStatus == "All" ||
+                    item.Status == SelectedStatus);
 
             return SelectedSort switch
             {
-                "Rating" => items.OrderByDescending(item => item.Rating ?? 0),
-                "Recently added" => items.OrderByDescending(item => item.DateAdded),
-                _ => items.OrderBy(item => item.Title)
+                "Rating" =>
+                    items.OrderByDescending(item => item.Rating ?? 0),
+
+                "Recently added" =>
+                    items.OrderByDescending(item => item.DateAdded),
+
+                _ =>
+                    items.OrderBy(item => item.Title)
             };
         }
     }
 
-    private int CountByStatus(string status) => CurrentMediaItems.Count(item => item.Status == status);
+    private int CountByStatus(string status) =>
+        CurrentMediaItems.Count(item => item.Status == status);
 
     private void SetStatusFilter(string status)
     {
-        SelectedStatus = SelectedStatus == status ? "All" : status;
+        SelectedStatus =
+            SelectedStatus == status
+                ? "All"
+                : status;
     }
 
     private void ShowDetails(int id) => SelectedItemId = id;
@@ -373,16 +601,28 @@
         }
     }
 
-    private void UpdateStatus(int id, ChangeEventArgs args)
+    private void UpdateStatus(
+        int id,
+        ChangeEventArgs args)
     {
-        var item = MediaItems.FirstOrDefault(media => media.Id == id && media.UserId == CurrentUserId);
-        var status = args.Value?.ToString();
-        if (item is null || status is null || !Statuses.Contains(status))
+        var item =
+            MediaItems.FirstOrDefault(
+                media =>
+                    media.Id == id &&
+                    media.UserId == CurrentUserId);
+
+        var status =
+            args.Value?.ToString();
+
+        if (item is null ||
+            status is null ||
+            !Statuses.Contains(status))
         {
             return;
         }
 
         item.Status = status;
+
         if (status == "Currently Enjoying")
         {
             item.StartedOn ??= DateTime.Today;
@@ -399,52 +639,79 @@
         }
     }
 
-    private static string StatusBadgeClass(string status) => status switch
-    {
-        "Completed" => "text-bg-success",
-        "Currently Enjoying" => "text-bg-primary",
-        _ => "text-bg-warning"
-    };
+    private static string StatusBadgeClass(string status) =>
+        status switch
+        {
+            "Completed" =>
+                "text-bg-success",
+
+            "Currently Enjoying" =>
+                "text-bg-primary",
+
+            _ =>
+                "text-bg-warning"
+        };
 
     private void NewMediaItem()
     {
-        EditingItem = new MediaItem { Category = "Movies", Status = "Want to Try" };
+        EditingItem =
+            new MediaItem
+            {
+                Category = "Movies",
+                Status = "Want to Try"
+            };
+
         IsEditing = true;
     }
 
     private void EditItem(MediaItem item)
     {
-        EditingItem = new MediaItem
-        {
-            Id = item.Id,
-            UserId = item.UserId,
-            Title = item.Title,
-            Category = item.Category,
-            Status = item.Status,
-            Rating = item.Rating,
-            Notes = item.Notes,
-            StartedOn = item.StartedOn,
-            CompletedOn = item.CompletedOn,
-            DateAdded = item.DateAdded
-        };
+        EditingItem =
+            new MediaItem
+            {
+                Id = item.Id,
+                UserId = item.UserId,
+                Title = item.Title,
+                Category = item.Category,
+                Status = item.Status,
+                Rating = item.Rating,
+                Notes = item.Notes,
+                StartedOn = item.StartedOn,
+                CompletedOn = item.CompletedOn,
+                DateAdded = item.DateAdded
+            };
+
         IsEditing = true;
     }
 
     private void SaveItem()
     {
         EditingItem.UserId = CurrentUserId;
+
         if (EditingItem.Id == 0)
         {
-            EditingItem.Id = MediaItems.Count == 0 ? 1 : MediaItems.Max(item => item.Id) + 1;
-            EditingItem.DateAdded = DateTime.Now;
+            EditingItem.Id =
+                MediaItems.Count == 0
+                    ? 1
+                    : MediaItems.Max(item => item.Id) + 1;
+
+            EditingItem.DateAdded =
+                DateTime.Now;
+
             MediaItems.Add(EditingItem);
         }
         else
         {
-            var index = MediaItems.FindIndex(item => item.Id == EditingItem.Id && item.UserId == CurrentUserId);
+            var index =
+                MediaItems.FindIndex(
+                    item =>
+                        item.Id == EditingItem.Id &&
+                        item.UserId == CurrentUserId);
+
             if (index >= 0)
             {
-                MediaItems[index] = EditingItem;
+                MediaItems[index] =
+                    EditingItem;
             }
         }
 
@@ -471,31 +738,54 @@
 
     private void CancelEdit()
     {
-        EditingItem = new MediaItem();
-        IsEditing = false;
+        EditingItem =
+            new MediaItem();
+
+        IsEditing =
+            false;
     }
 
     private void ToggleAccountForm()
     {
-        IsCreatingAccount = !IsCreatingAccount;
-        NewAccount = new UserAccount();
+        IsCreatingAccount =
+            !IsCreatingAccount;
+
+        NewAccount =
+            new UserAccount();
     }
 
     private void CreateAccount()
     {
-        NewAccount.Id = NextUserId++;
-        Accounts.Add(NewAccount);
-        CurrentUserId = NewAccount.Id;
-        NewAccount = new UserAccount();
-        IsCreatingAccount = false;
+        NewAccount.Id =
+            NextUserId++;
+
+        Accounts.Add(
+            NewAccount);
+
+        CurrentUserId =
+            NewAccount.Id;
+
+        NewAccount =
+            new UserAccount();
+
+        IsCreatingAccount =
+            false;
+
         CancelEdit();
     }
 
     private void SwitchAccount(ChangeEventArgs args)
     {
-        if (int.TryParse(args.Value?.ToString(), out var userId) && Accounts.Any(account => account.Id == userId))
+        if (int.TryParse(
+                args.Value?.ToString(),
+                out var userId) &&
+            Accounts.Any(
+                account =>
+                    account.Id == userId))
         {
-            CurrentUserId = userId;
+            CurrentUserId =
+                userId;
+
             CancelEdit();
         }
     }
