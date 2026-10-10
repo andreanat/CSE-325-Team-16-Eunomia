@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "CSE-325-Team-16-Eunomia/1.0.0": {
+        "runtime": {
+          "CSE-325-Team-16-Eunomia.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CSE-325-Team-16-Eunomia/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

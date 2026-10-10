@@ -2,71 +2,63 @@
 
 <PageTitle>Eunomia | Personal Media Tracker</PageTitle>
 
-<div class="container py-4">
-    <header class="mb-4">
-        <p class="text-uppercase text-primary fw-semibold mb-2">Eunomia · Your media journal</p>
-        <h1 class="display-5 fw-bold mb-2">Keep track of what you enjoy.</h1>
-        <p class="text-secondary mb-0">One personal library for movies, shows, books, music, and games.</p>
+<div class="container journal-shell py-4">
+    <header class="journal-header mb-4">
+        <div>
+            <p class="journal-kicker mb-2"><span class="journal-kicker-mark"></span> Eunomia <span class="kicker-divider">/</span> Personal media journal</p>
+            <h1 class="journal-title mb-2">A good story stays with you.</h1>
+            <p class="journal-intro mb-0">A considered record of what you watch, read, play, and return to.</p>
+        </div>
+        <div class="journal-stamp" aria-label="Personal archive, five categories">
+            <span>PERSONAL</span>
+            <strong>ARCHIVE</strong>
+            <span>FIVE CATEGORIES</span>
+        </div>
     </header>
 
     <section class="row g-3 mb-4" aria-label="Media activity summary">
         <div class="col-sm-4">
-            <button type="button" class="card h-100 w-100 border-0 bg-success-subtle text-start"
-                    @onclick='() => SetStatusFilter("Completed")' aria-pressed="@(SelectedStatus == "Completed")">
-                <span class="card-body">
-                    <p class="text-uppercase small fw-semibold text-success mb-2">Completed</p>
-                    <p class="display-6 fw-bold mb-0">@CountByStatus("Completed")</p>
-                    <p class="small text-secondary mb-0">items finished</p>
-                </span>
+            <button type="button" class="summary-tile summary-completed h-100 w-100 text-start" @onclick='() => SetStatusFilter("Completed")' aria-pressed="@(SelectedStatus == "Completed")">
+                <span class="summary-index">01 / FINISHED</span>
+                <span class="summary-label">Completed</span>
+                <span class="summary-bottom"><strong class="summary-count">@CountByStatus("Completed")</strong><span class="summary-caption">items finished</span></span>
             </button>
         </div>
 
         <div class="col-sm-4">
-            <button type="button" class="card h-100 w-100 border-0 bg-primary-subtle text-start"
-                    @onclick='() => SetStatusFilter("Currently Enjoying")'
-                    aria-pressed="@(SelectedStatus == "Currently Enjoying")">
-                <span class="card-body">
-                    <p class="text-uppercase small fw-semibold text-primary mb-2">Currently enjoying</p>
-                    <p class="display-6 fw-bold mb-0">@CountByStatus("Currently Enjoying")</p>
-                    <p class="small text-secondary mb-0">in progress</p>
-                </span>
+            <button type="button" class="summary-tile summary-current h-100 w-100 text-start" @onclick='() => SetStatusFilter("Currently Enjoying")' aria-pressed="@(SelectedStatus == "Currently Enjoying")">
+                <span class="summary-index">02 / IN PROGRESS</span>
+                <span class="summary-label">Currently enjoying</span>
+                <span class="summary-bottom"><strong class="summary-count">@CountByStatus("Currently Enjoying")</strong><span class="summary-caption">in progress</span></span>
             </button>
         </div>
 
         <div class="col-sm-4">
-            <button type="button" class="card h-100 w-100 border-0 bg-warning-subtle text-start"
-                    @onclick='() => SetStatusFilter("Want to Try")' aria-pressed="@(SelectedStatus == "Want to Try")">
-                <span class="card-body">
-                    <p class="text-uppercase small fw-semibold text-warning-emphasis mb-2">Want to try</p>
-                    <p class="display-6 fw-bold mb-0">@CountByStatus("Want to Try")</p>
-                    <p class="small text-secondary mb-0">saved for later</p>
-                </span>
+            <button type="button" class="summary-tile summary-queued h-100 w-100 text-start" @onclick='() => SetStatusFilter("Want to Try")' aria-pressed="@(SelectedStatus == "Want to Try")">
+                <span class="summary-index">03 / ON THE LIST</span>
+                <span class="summary-label">Want to try</span>
+                <span class="summary-bottom"><strong class="summary-count">@CountByStatus("Want to Try")</strong><span class="summary-caption">saved for later</span></span>
             </button>
         </div>
     </section>
 
-    <section class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+    <section class="library-heading d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
         <div>
-            <h2 class="h3 mb-1">My media library</h2>
-            <p class="text-secondary mb-0">@CurrentMediaItems.Count() items across your collection</p>
+            <p class="section-kicker mb-1">YOUR COLLECTION</p>
+            <h2 class="library-title mb-1">The library</h2>
+            <p class="text-secondary mb-0">@CurrentMediaItems.Count() titles, kept in one place</p>
         </div>
-
-        <button class="btn btn-primary" @onclick="NewMediaItem">
-            Add media
-        </button>
+        <button class="btn btn-primary add-media-button" @onclick="NewMediaItem"><span aria-hidden="true">+</span> Add a title</button>
     </section>
 
-    <section class="card border-0 shadow-sm mb-4" aria-label="Search and filter media">
-        <div class="card-body">
-            <div class="row g-3 align-items-end">
-
-                <div class="col-md-4">
+    <section class="filter-bar mb-4" aria-label="Search and filter media">
+        <div class="row g-3 align-items-end">
+                <div class="col-12 col-sm-6 col-xl-3">
                     <label class="form-label fw-semibold" for="media-search">Search</label>
                     <input id="media-search" class="form-control" @bind="SearchTerm" @bind:event="oninput"
                            placeholder="Title or notes" />
                 </div>
-
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-xl-3">
                     <label class="form-label fw-semibold" for="category-filter">Category</label>
 
                     <select id="category-filter" class="form-select" @bind="SelectedCategory">
@@ -80,8 +72,7 @@
 
                     </select>
                 </div>
-
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-xl-3">
                     <label class="form-label fw-semibold" for="status-filter">Status</label>
 
                     <select id="status-filter" class="form-select" @bind="SelectedStatus">
@@ -95,8 +86,7 @@
 
                     </select>
                 </div>
-
-                <div class="col-md-2">
+                <div class="col-12 col-sm-6 col-xl-3">
                     <label class="form-label fw-semibold" for="sort-order">Sort by</label>
 
                     <select id="sort-order" class="form-select" @bind="SelectedSort">
@@ -107,8 +97,6 @@
 
                     </select>
                 </div>
-
-            </div>
         </div>
     </section>
 
@@ -118,22 +106,14 @@
 
             @foreach (var item in FilteredMediaItems)
             {
-                <div class="col-md-6 col-xl-4">
-
-                    <article class="card h-100 border shadow-sm">
-
-                        <div class="card-body d-flex flex-column">
-
+                <div class="col-12 col-sm-6 col-xl-4">
+                    <article class="library-card h-100">
+                        <div class="library-card-body d-flex flex-column">
                             <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
 
                                 <div>
-                                    <p class="small text-uppercase text-secondary fw-semibold mb-1">
-                                        @item.Category
-                                    </p>
-
-                                    <h3 class="h5 mb-0">
-                                        @item.Title
-                                    </h3>
+                                    <p class="category-label mb-2">@item.Category <span aria-hidden="true">/</span> #@item.Id.ToString("00")</p>
+                                    <h3 class="media-title mb-0">@item.Title</h3>
                                 </div>
 
                                 <span class="badge @StatusBadgeClass(item.Status)">
@@ -141,77 +121,19 @@
                                 </span>
 
                             </div>
-
-                            <p class="mb-2">
-                                @(item.Rating is null ? "Not rated" : $"Rating: {item.Rating}/10")
-                            </p>
-
-                            <label class="form-label small fw-semibold" for="status-@item.Id">
-                                Update status
-                            </label>
-
-                            <select id="status-@item.Id" class="form-select form-select-sm mb-3" value="@item.Status"
-                                    @onchange="args => UpdateStatus(item.Id, args)">
-
+                            <p class="media-rating mb-3">@(item.Rating is null ? "Not rated yet" : $"Rated {item.Rating} out of 10")</p>
+                            <label class="form-label small fw-semibold" for="status-@item.Id">Reading status</label>
+                            <select id="status-@item.Id" class="form-select form-select-sm mb-3" value="@item.Status" @onchange="args => UpdateStatus(item.Id, args)">
                                 @foreach (var status in Statuses)
                                 {
                                     <option value="@status">@status</option>
                                 }
 
                             </select>
-
-                            @if (ExpandedItemId == item.Id)
-                            {
-                                <div class="border-top pt-3 mb-3">
-
-                                    @if (!string.IsNullOrWhiteSpace(item.Notes))
-                                    {
-                                        <p class="text-secondary mb-2">
-                                            @item.Notes
-                                        </p>
-                                    }
-
-                                    <dl class="row small text-secondary mb-0">
-
-                                        @if (item.StartedOn is not null)
-                                        {
-                                            <dt class="col-5">Started</dt>
-                                            <dd class="col-7">
-                                                @item.StartedOn.Value.ToString("MMM d, yyyy")
-                                            </dd>
-                                        }
-
-                                        @if (item.CompletedOn is not null)
-                                        {
-                                            <dt class="col-5">Completed</dt>
-                                            <dd class="col-7">
-                                                @item.CompletedOn.Value.ToString("MMM d, yyyy")
-                                            </dd>
-                                        }
-
-                                        <dt class="col-5">Added</dt>
-                                        <dd class="col-7">
-                                            @item.DateAdded.ToString("MMM d, yyyy")
-                                        </dd>
-
-                                    </dl>
-                                </div>
-                            }
-
                             <div class="d-flex flex-wrap gap-2 mt-auto">
-
-                                <button class="btn btn-sm btn-outline-secondary" @onclick="() => ToggleDetails(item.Id)">
-                                    @(ExpandedItemId == item.Id ? "Hide details" : "View details")
-                                </button>
-
-                                <button class="btn btn-sm btn-outline-primary" @onclick="() => EditItem(item)">
-                                    Edit details
-                                </button>
-
-                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteItem(item.Id)">
-                                    Delete
-                                </button>
-
+                                <button class="btn btn-sm btn-outline-secondary" @onclick="() => ShowDetails(item.Id)">View details</button>
+                                <button class="btn btn-sm btn-outline-primary" @onclick="() => EditItem(item)">Edit details</button>
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => RequestDelete(item.Id)">Delete</button>
                             </div>
 
                         </div>
@@ -236,18 +158,47 @@
         </div>
     }
 
+    @if (SelectedItem is not null)
+    {
+        <div class="media-modal-backdrop">
+            <section class="media-modal" role="dialog" aria-modal="true" aria-labelledby="media-detail-title">
+                <div class="media-modal-header">
+                    <div>
+                        <p class="small text-uppercase text-secondary fw-semibold mb-1">@SelectedItem.Category</p>
+                        <h2 id="media-detail-title" class="h3 mb-0">@SelectedItem.Title</h2>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDetails" aria-label="Close details">Close</button>
+                </div>
+                <dl class="row media-detail-list">
+                    <dt class="col-sm-4">Status</dt>
+                    <dd class="col-sm-8"><span class="badge @StatusBadgeClass(SelectedItem.Status)">@SelectedItem.Status</span></dd>
+                    <dt class="col-sm-4">Rating</dt>
+                    <dd class="col-sm-8">@(SelectedItem.Rating is null ? "Not rated" : $"{SelectedItem.Rating}/10")</dd>
+                    <dt class="col-sm-4">Started</dt>
+                    <dd class="col-sm-8">@(SelectedItem.StartedOn?.ToString("MMM d, yyyy") ?? "Not set")</dd>
+                    <dt class="col-sm-4">Completed</dt>
+                    <dd class="col-sm-8">@(SelectedItem.CompletedOn?.ToString("MMM d, yyyy") ?? "Not set")</dd>
+                    <dt class="col-sm-4">Added</dt>
+                    <dd class="col-sm-8">@SelectedItem.DateAdded.ToString("MMM d, yyyy")</dd>
+                    <dt class="col-sm-4">Notes</dt>
+                    <dd class="col-sm-8 notes-value">@(string.IsNullOrWhiteSpace(SelectedItem.Notes) ? "No notes" : SelectedItem.Notes)</dd>
+                </dl>
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-primary" @onclick="EditSelectedItem">Edit item</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDetails">Close</button>
+                </div>
+            </section>
+        </div>
+    }
+
     @if (IsEditing)
     {
-        <section class="card border-0 shadow-sm mt-4" aria-label="Media item editor">
-
-            <div class="card-body">
-
-                <h2 class="h4 mb-3">
-                    @(EditingItem.Id == 0
-                        ? "Add to your library"
-                        : $"Edit {EditingItem.Title}")
-                </h2>
-
+        <div class="media-modal-backdrop">
+            <section class="media-modal" role="dialog" aria-modal="true" aria-labelledby="media-editor-title">
+                <div class="media-modal-header">
+                    <h2 id="media-editor-title" class="h4 mb-0">@(EditingItem.Id == 0 ? "Add to your library" : $"Edit {EditingItem.Title}")</h2>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelEdit" aria-label="Close editor">Close</button>
+                </div>
                 <EditForm Model="EditingItem" OnValidSubmit="SaveItem">
 
                     <DataAnnotationsValidator />
@@ -366,10 +317,22 @@
                     </div>
 
                 </EditForm>
+            </section>
+        </div>
+    }
 
-            </div>
-
-        </section>
+    @if (PendingDeleteItem is not null)
+    {
+        <div class="media-modal-backdrop">
+            <section class="media-modal media-confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-confirm-title">
+                <h2 id="delete-confirm-title" class="h4">Remove this item?</h2>
+                <p>“@PendingDeleteItem.Title” will be removed from your library.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Remove item</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">Cancel</button>
+                </div>
+            </section>
+        </div>
     }
 
     <section class="border-top mt-5 pt-4">
@@ -486,9 +449,8 @@
     private bool IsEditing;
 
     private bool IsCreatingAccount;
-
-    private int? ExpandedItemId;
-
+    private int? SelectedItemId;
+    private int? PendingDeleteItemId;
     private int NextUserId = 2;
 
     private MediaItem EditingItem = new();
@@ -509,6 +471,8 @@
         Accounts.Single(account => account.Id == CurrentUserId);
 
     private int CurrentUserId = 1;
+    private MediaItem? SelectedItem => MediaItems.FirstOrDefault(item => item.Id == SelectedItemId && item.UserId == CurrentUserId);
+    private MediaItem? PendingDeleteItem => MediaItems.FirstOrDefault(item => item.Id == PendingDeleteItemId && item.UserId == CurrentUserId);
 
     private List<MediaItem> MediaItems = new()
     {
@@ -624,12 +588,17 @@
                 : status;
     }
 
-    private void ToggleDetails(int id)
+    private void ShowDetails(int id) => SelectedItemId = id;
+
+    private void CloseDetails() => SelectedItemId = null;
+
+    private void EditSelectedItem()
     {
-        ExpandedItemId =
-            ExpandedItemId == id
-                ? null
-                : id;
+        if (SelectedItem is { } item)
+        {
+            EditItem(item);
+            CloseDetails();
+        }
     }
 
     private void UpdateStatus(
@@ -749,11 +718,23 @@
         CancelEdit();
     }
 
-    private void DeleteItem(int id) =>
-        MediaItems.RemoveAll(
-            item =>
-                item.Id == id &&
-                item.UserId == CurrentUserId);
+    private void RequestDelete(int id) => PendingDeleteItemId = id;
+
+    private void ConfirmDelete()
+    {
+        if (PendingDeleteItemId is int id)
+        {
+            MediaItems.RemoveAll(item => item.Id == id && item.UserId == CurrentUserId);
+            if (SelectedItemId == id)
+            {
+                CloseDetails();
+            }
+        }
+
+        PendingDeleteItemId = null;
+    }
+
+    private void CancelDelete() => PendingDeleteItemId = null;
 
     private void CancelEdit()
     {
