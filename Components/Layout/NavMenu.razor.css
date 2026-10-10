@@ -3,16 +3,33 @@
     align-items: center;
     min-height: 4.25rem;
     padding: 0.9rem 1rem;
-    background: rgba(255,255,255,0.05);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
 }
 
 .navbar-brand {
     font-size: 1.25rem;
     font-weight: 700;
-    letter-spacing: -0.04em;
-    color: #f8f0ea;
+    letter-spacing: 0;
+    color: #fffefa;
     text-decoration: none;
+}
+
+.nav-toggle {
+    display: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0.55rem;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 0.5rem;
+    background: transparent;
+}
+
+.nav-toggle span {
+    display: block;
+    height: 2px;
+    margin: 4px 0;
+    background: #fffefa;
 }
 
 .nav-scrollable {
@@ -29,26 +46,35 @@
     align-items: center;
     min-height: 2.9rem;
     padding: 0.75rem 0.9rem;
-    border-radius: 0.8rem;
-    color: rgba(255,255,255,0.8);
+    border-radius: 0.3rem;
+    color: rgba(255,254,250,0.82);
     background: transparent;
     transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
 
 .nav-item ::deep .nav-link:hover {
-    background: rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.09);
     color: #fff;
     transform: translateX(2px);
 }
 
 .nav-item ::deep a.active {
-    background: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.14);
     color: #fff;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
 }
 
 @media (max-width: 640.98px) {
     .nav-scrollable {
+        display: none;
+        padding: 0.25rem 0.8rem 0.8rem;
+    }
+
+    .nav-scrollable.expanded {
+        display: block;
+    }
+
+    .nav-toggle {
         display: block;
     }
 }
