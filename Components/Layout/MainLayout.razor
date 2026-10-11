@@ -1,4 +1,7 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+@inject UserSessionService UserSession
+@inject NavigationManager Navigation
+@implements IDisposable
 
 <div class="page">
     <div class="sidebar">
@@ -17,3 +20,43 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        UserSession.OnChange += StateHasChanged;
+        Navigation.LocationChanged += OnLocationChanged;
+        EnforceAuthentication();
+    }
+
+    protected override void OnParametersSet()
+    {
+        EnforceAuthentication();
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        EnforceAuthentication();
+    }
+
+    private void EnforceAuthentication()
+    {
+        var relative = Navigation.ToBaseRelativePath(Navigation.Uri).TrimStart('/');
+        var path = relative.Split('?', '#')[0];
+
+        var isPublic = string.Equals(path, "login", StringComparison.OrdinalIgnoreCase) ||
+                       string.Equals(path, "register", StringComparison.OrdinalIgnoreCase) ||
+                       string.Equals(path, "Error", StringComparison.OrdinalIgnoreCase);
+
+        if (!UserSession.IsLoggedIn && !isPublic)
+        {
+            Navigation.NavigateTo("login");
+        }
+    }
+
+    public void Dispose()
+    {
+        UserSession.OnChange -= StateHasChanged;
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+}
