@@ -2,6 +2,7 @@
 @inject IUserService UserService
 @inject UserSessionService UserSession
 @inject NavigationManager Navigation
+@inject IMediaService MediaService
 
 <PageTitle>Eunomia | Personal Media Tracker</PageTitle>
 
@@ -452,83 +453,33 @@ else
                     CurrentUserId = Accounts.First().Id;
                 }
             }
+
+            await LoadMediaItemsAsync();
         }
         catch
         {
             // Fallback gracefully if database is unreachable
         }
     }
+
+    private async Task LoadMediaItemsAsync()
+    {
+        try
+        {
+            MediaItems = await MediaService.GetMediaItemsByUserAsync(CurrentUserId);
+        }
+        catch
+        {
+            MediaItems = new();
+        }
+    }
+
     private MediaItem? SelectedItem => MediaItems.FirstOrDefault(item => item.Id == SelectedItemId && item.UserId == CurrentUserId);
     private MediaItem? PendingDeleteItem => MediaItems.FirstOrDefault(item => item.Id == PendingDeleteItemId && item.UserId == CurrentUserId);
 
-    private List<MediaItem> MediaItems = new()
-    {
-        new()
-        {
-            Id = 1,
-            UserId = 1,
-            Title = "The Horizon",
-            Category = "Movies",
-            Status = "Completed",
-            Rating = 9,
-            Notes = "Brilliant world-building and a memorable ending.",
-            StartedOn = new DateTime(2026, 8, 4),
-            CompletedOn = new DateTime(2026, 8, 5),
-            DateAdded = new DateTime(2026, 8, 1)
-        },
+    private List<MediaItem> MediaItems = new();
 
-        new()
-        {
-            Id = 2,
-            UserId = 1,
-            Title = "City of Echoes",
-            Category = "TV Shows",
-            Status = "Currently Enjoying",
-            Rating = 8,
-            Notes = "Watching one episode each week.",
-            StartedOn = new DateTime(2026, 9, 10),
-            DateAdded = new DateTime(2026, 9, 8)
-        },
-
-        new()
-        {
-            Id = 3,
-            UserId = 1,
-            Title = "A Field Guide to Quiet",
-            Category = "Books",
-            Status = "Want to Try",
-            Notes = "Recommended by Morgan.",
-            DateAdded = new DateTime(2026, 9, 18)
-        },
-
-        new()
-        {
-            Id = 4,
-            UserId = 1,
-            Title = "Tidal Rooms",
-            Category = "Music",
-            Status = "Completed",
-            Rating = 7,
-            Notes = "Return to the instrumental tracks.",
-            StartedOn = new DateTime(2026, 7, 12),
-            CompletedOn = new DateTime(2026, 7, 12),
-            DateAdded = new DateTime(2026, 7, 10)
-        },
-
-        new()
-        {
-            Id = 5,
-            UserId = 1,
-            Title = "Lantern Vale",
-            Category = "Games",
-            Status = "Want to Try",
-            Notes = "Try co-op mode with friends.",
-            DateAdded = new DateTime(2026, 9, 20)
-        }
-    };
-
-    private IEnumerable<MediaItem> CurrentMediaItems =>
-        MediaItems.Where(item => item.UserId == CurrentUserId);
+    private IEnumerable<MediaItem> CurrentMediaItems => MediaItems;
 
     private IEnumerable<MediaItem> FilteredMediaItems
     {
@@ -588,42 +539,21 @@ else
         }
     }
 
-    private void UpdateStatus(
+    private async Task UpdateStatus(
         int id,
         ChangeEventArgs args)
     {
-        var item =
-            MediaItems.FirstOrDefault(
-                media =>
-                    media.Id == id &&
-                    media.UserId == CurrentUserId);
-
         var status =
             args.Value?.ToString();
 
-        if (item is null ||
-            status is null ||
+        if (string.IsNullOrEmpty(status) ||
             !Statuses.Contains(status))
         {
             return;
         }
 
-        item.Status = status;
-
-        if (status == "Currently Enjoying")
-        {
-            item.StartedOn ??= DateTime.Today;
-            item.CompletedOn = null;
-        }
-        else if (status == "Completed")
-        {
-            item.StartedOn ??= DateTime.Today;
-            item.CompletedOn ??= DateTime.Today;
-        }
-        else
-        {
-            item.CompletedOn = null;
-        }
+        await MediaService.UpdateStatusAsync(id, CurrentUserId, status);
+        await LoadMediaItemsAsync();
     }
 
     private static string StatusBadgeClass(string status) =>
@@ -671,51 +601,25 @@ else
         IsEditing = true;
     }
 
-    private void SaveItem()
+    private async Task SaveItem()
     {
-        EditingItem.UserId = CurrentUserId;
-
-        if (EditingItem.Id == 0)
-        {
-            EditingItem.Id =
-                MediaItems.Count == 0
-                    ? 1
-                    : MediaItems.Max(item => item.Id) + 1;
-
-            EditingItem.DateAdded =
-                DateTime.Now;
-
-            MediaItems.Add(EditingItem);
-        }
-        else
-        {
-            var index =
-                MediaItems.FindIndex(
-                    item =>
-                        item.Id == EditingItem.Id &&
-                        item.UserId == CurrentUserId);
-
-            if (index >= 0)
-            {
-                MediaItems[index] =
-                    EditingItem;
-            }
-        }
-
+        await MediaService.SaveMediaItemAsync(EditingItem, CurrentUserId);
+        await LoadMediaItemsAsync();
         CancelEdit();
     }
 
     private void RequestDelete(int id) => PendingDeleteItemId = id;
 
-    private void ConfirmDelete()
+    private async Task ConfirmDelete()
     {
         if (PendingDeleteItemId is int id)
         {
-            MediaItems.RemoveAll(item => item.Id == id && item.UserId == CurrentUserId);
+            await MediaService.DeleteMediaItemAsync(id, CurrentUserId);
             if (SelectedItemId == id)
             {
                 CloseDetails();
             }
+            await LoadMediaItemsAsync();
         }
 
         PendingDeleteItemId = null;
@@ -733,7 +637,7 @@ else
     }
 
 
-    private void SwitchAccount(ChangeEventArgs args)
+    private async Task SwitchAccount(ChangeEventArgs args)
     {
         if (int.TryParse(
                 args.Value?.ToString(),
@@ -746,6 +650,7 @@ else
                 userId;
 
             CancelEdit();
+            await LoadMediaItemsAsync();
         }
     }
 }
