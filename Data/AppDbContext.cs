@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<UserAccount> Users => Set<UserAccount>();
+    public DbSet<MediaItem> MediaItems => Set<MediaItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -49,6 +50,38 @@ public class AppDbContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
+
+        modelBuilder.Entity<MediaItem>(entity =>
+        {
+            entity.ToTable("MediaItems");
+
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Title)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(e => e.Category)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(e => e.Notes)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.StartedOn)
+                .HasColumnType("timestamp without time zone");
+
+            entity.Property(e => e.CompletedOn)
+                .HasColumnType("timestamp without time zone");
+
+            entity.Property(e => e.DateAdded)
+                .HasColumnType("timestamp without time zone");
+
+            entity.HasIndex(e => e.UserId);
+        });
     }
 }
-
