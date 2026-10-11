@@ -1,0 +1,137 @@
+@page "/register"
+@inject IUserService UserService
+@inject UserSessionService UserSession
+@inject NavigationManager Navigation
+
+<PageTitle>Register | Eunomia</PageTitle>
+
+<div class="container py-4" style="max-width: 640px;">
+    <div class="card p-4 p-md-5 shadow-sm">
+        <div class="mb-4 text-center">
+            <p class="text-uppercase small fw-bold text-success mb-1" style="letter-spacing: 1px;">Join Eunomia</p>
+            <h2 class="h3 mb-2" style="font-family: Georgia, serif;">Create your account</h2>
+            <p class="text-muted small mb-0">Start cataloging your personal collection of books, films, and games.</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="alert alert-danger d-flex align-items-center mb-3 py-2 px-3 small" role="alert">
+                <span class="me-2 fw-bold">⚠</span>
+                <div>@ErrorMessage</div>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(SuccessMessage))
+        {
+            <div class="alert alert-success d-flex align-items-center mb-3 py-2 px-3 small" role="alert">
+                <span class="me-2 fw-bold">✓</span>
+                <div>@SuccessMessage</div>
+            </div>
+        }
+
+        <EditForm Model="Model" OnValidSubmit="HandleRegister">
+            <DataAnnotationsValidator />
+
+            <!-- Username -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold small" for="reg-username">Username</label>
+                <InputText id="reg-username" class="form-control" @bind-Value="Model.Username" placeholder="e.g. janesmith" autocomplete="username" />
+                <div class="form-text small text-muted">Used for logging in. Alphanumeric characters, periods, underscores, and dashes.</div>
+                <ValidationMessage For="() => Model.Username" class="text-danger small mt-1" />
+            </div>
+
+            <!-- First & Last Name -->
+            <div class="row g-2 mb-3">
+                <div class="col-12 col-sm-6">
+                    <label class="form-label fw-semibold small" for="reg-firstname">First Name</label>
+                    <InputText id="reg-firstname" class="form-control" @bind-Value="Model.FirstName" placeholder="Jane" autocomplete="given-name" />
+                    <ValidationMessage For="() => Model.FirstName" class="text-danger small mt-1" />
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label class="form-label fw-semibold small" for="reg-lastname">Last Name</label>
+                    <InputText id="reg-lastname" class="form-control" @bind-Value="Model.LastName" placeholder="Smith" autocomplete="family-name" />
+                    <ValidationMessage For="() => Model.LastName" class="text-danger small mt-1" />
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold small" for="reg-email">Email Address</label>
+                <InputText id="reg-email" type="email" class="form-control" @bind-Value="Model.Email" placeholder="jane.smith@example.com" autocomplete="email" />
+                <div class="form-text small text-muted">Must be a valid email format.</div>
+                <ValidationMessage For="() => Model.Email" class="text-danger small mt-1" />
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold small" for="reg-password">Password</label>
+                <InputText id="reg-password" type="password" class="form-control" @bind-Value="Model.Password" placeholder="Minimum 6 characters" autocomplete="new-password" />
+                <div class="form-text small text-muted">Your password will be salted and hashed with BCrypt before storage.</div>
+                <ValidationMessage For="() => Model.Password" class="text-danger small mt-1" />
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold small" for="reg-confirm">Confirm Password</label>
+                <InputText id="reg-confirm" type="password" class="form-control" @bind-Value="Model.ConfirmPassword" placeholder="Re-type password" autocomplete="new-password" />
+                <ValidationMessage For="() => Model.ConfirmPassword" class="text-danger small mt-1" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mb-3" disabled="@IsSubmitting">
+                @if (IsSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Creating account...</span>
+                }
+                else
+                {
+                    <span>Complete Registration</span>
+                }
+            </button>
+        </EditForm>
+
+        <div class="text-center pt-2 border-top">
+            <span class="text-muted small">Already have an account? </span>
+            <a href="login" class="small fw-semibold text-decoration-none">Sign in here</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    private RegisterModel Model = new();
+    private string? ErrorMessage;
+    private string? SuccessMessage;
+    private bool IsSubmitting;
+
+    private async Task HandleRegister()
+    {
+        ErrorMessage = null;
+        SuccessMessage = null;
+        IsSubmitting = true;
+
+        try
+        {
+            var result = await UserService.RegisterAsync(Model);
+            if (result.Success && result.User != null)
+            {
+                UserSession.SetUser(result.User);
+                SuccessMessage = $"Account for {result.User.FirstName} created successfully! Redirecting to dashboard...";
+                await Task.Delay(800);
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                ErrorMessage = result.ErrorMessage ?? "Failed to create account. Please check your information.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Registration error: {ex.Message}";
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+}
+
