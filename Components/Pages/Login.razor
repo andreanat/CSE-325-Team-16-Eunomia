@@ -131,6 +131,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (UserSession.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
         try
         {
             DemoAccounts = await UserService.GetAllUsersAsync();

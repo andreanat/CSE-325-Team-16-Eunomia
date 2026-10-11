@@ -103,6 +103,14 @@
     private string? SuccessMessage;
     private bool IsSubmitting;
 
+    protected override void OnInitialized()
+    {
+        if (UserSession.IsLoggedIn)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
     private async Task HandleRegister()
     {
         ErrorMessage = null;

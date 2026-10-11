@@ -16,14 +16,13 @@
 
 <div class="nav-scrollable @(IsNavigationExpanded ? "expanded" : "")">
     <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All" @onclick="CloseNavigation">
-                <span class="bi bi-house-door-fill-nav-menu me-2" aria-hidden="true">📖</span> Dashboard &amp; library
-            </NavLink>
-        </div>
-
         @if (UserSession.IsLoggedIn && UserSession.CurrentUser != null)
         {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All" @onclick="CloseNavigation">
+                    <span class="bi bi-house-door-fill-nav-menu me-2" aria-hidden="true">📖</span> Dashboard &amp; library
+                </NavLink>
+            </div>
             <div class="px-3 my-3">
                 <div class="p-2 rounded" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15);">
                     <div class="small text-white-50 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Signed In As</div>

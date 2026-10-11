@@ -1,9 +1,18 @@
 @page "/"
 @inject IUserService UserService
 @inject UserSessionService UserSession
+@inject NavigationManager Navigation
 
 <PageTitle>Eunomia | Personal Media Tracker</PageTitle>
 
+@if (!UserSession.IsLoggedIn)
+{
+    <div class="container py-5 text-center">
+        <p class="text-muted"><span class="spinner-border spinner-border-sm me-2"></span> Redirecting to login...</p>
+    </div>
+}
+else
+{
 <div class="container journal-shell py-4">
     <header class="journal-header mb-4">
         <div>
@@ -376,6 +385,7 @@
     </section>
 
 </div>
+}
 
 @code {
 
@@ -421,13 +431,19 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (!UserSession.IsLoggedIn)
+        {
+            Navigation.NavigateTo("login");
+            return;
+        }
+
         try
         {
             var dbUsers = await UserService.GetAllUsersAsync();
             if (dbUsers.Any())
             {
                 Accounts = dbUsers;
-                if (UserSession.IsLoggedIn && UserSession.CurrentUser != null && Accounts.Any(a => a.Id == UserSession.CurrentUser.Id))
+                if (UserSession.CurrentUser != null && Accounts.Any(a => a.Id == UserSession.CurrentUser.Id))
                 {
                     CurrentUserId = UserSession.CurrentUser.Id;
                 }
