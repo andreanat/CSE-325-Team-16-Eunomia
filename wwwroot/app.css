@@ -468,3 +468,16 @@ textarea.form-control:focus {
 ::-webkit-scrollbar-track {
     background: transparent;
 }
+/* Improve contrast for the Delete button in all interactive states. */
+.btn-outline-danger {
+    --bs-btn-color: #a12622;
+    --bs-btn-border-color: #a12622;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #a12622;
+    --bs-btn-hover-border-color: #a12622;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #a12622;
+    --bs-btn-active-border-color: #a12622;
+    --bs-btn-disabled-color: #a12622;
+    --bs-btn-disabled-border-color: #a12622;
+}
