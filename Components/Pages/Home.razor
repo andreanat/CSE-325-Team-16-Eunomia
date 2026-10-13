@@ -14,379 +14,398 @@
 }
 else
 {
-<div class="container journal-shell py-4">
-    <header class="journal-header mb-4">
-        <div>
-            <p class="journal-kicker mb-2"><span class="journal-kicker-mark"></span> Eunomia <span class="kicker-divider">/</span> Personal media journal</p>
-            <h1 class="journal-title mb-2">A good story stays with you.</h1>
-            <p class="journal-intro mb-0">A considered record of what you watch, read, play, and return to.</p>
-        </div>
-        <div class="journal-stamp" aria-label="Personal archive, five categories">
-            <span>PERSONAL</span>
-            <strong>ARCHIVE</strong>
-            <span>FIVE CATEGORIES</span>
-        </div>
-    </header>
-
-    <section class="row g-3 mb-4" aria-label="Media activity summary">
-        <div class="col-sm-4">
-            <button type="button" class="summary-tile summary-completed h-100 w-100 text-start" @onclick='() => SetStatusFilter("Completed")' aria-pressed="@(SelectedStatus == "Completed")">
-                <span class="summary-index">01 / FINISHED</span>
-                <span class="summary-label">Completed</span>
-                <span class="summary-bottom"><strong class="summary-count">@CountByStatus("Completed")</strong><span class="summary-caption">items finished</span></span>
-            </button>
-        </div>
-
-        <div class="col-sm-4">
-            <button type="button" class="summary-tile summary-current h-100 w-100 text-start" @onclick='() => SetStatusFilter("Currently Enjoying")' aria-pressed="@(SelectedStatus == "Currently Enjoying")">
-                <span class="summary-index">02 / IN PROGRESS</span>
-                <span class="summary-label">Currently enjoying</span>
-                <span class="summary-bottom"><strong class="summary-count">@CountByStatus("Currently Enjoying")</strong><span class="summary-caption">in progress</span></span>
-            </button>
-        </div>
-
-        <div class="col-sm-4">
-            <button type="button" class="summary-tile summary-queued h-100 w-100 text-start" @onclick='() => SetStatusFilter("Want to Try")' aria-pressed="@(SelectedStatus == "Want to Try")">
-                <span class="summary-index">03 / ON THE LIST</span>
-                <span class="summary-label">Want to try</span>
-                <span class="summary-bottom"><strong class="summary-count">@CountByStatus("Want to Try")</strong><span class="summary-caption">saved for later</span></span>
-            </button>
-        </div>
-    </section>
-
-    <section class="library-heading d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
-        <div>
-            <p class="section-kicker mb-1">YOUR COLLECTION</p>
-            <h2 class="library-title mb-1">The library</h2>
-            <p class="text-secondary mb-0">@CurrentMediaItems.Count() titles, kept in one place</p>
-        </div>
-        <button class="btn btn-primary add-media-button" @onclick="NewMediaItem"><span aria-hidden="true">+</span> Add a title</button>
-    </section>
-
-    <section class="filter-bar mb-4" aria-label="Search and filter media">
-        <div class="row g-3 align-items-end">
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <label class="form-label fw-semibold" for="media-search">Search</label>
-                    <input id="media-search" class="form-control" @bind="SearchTerm" @bind:event="oninput"
-                           placeholder="Title or notes" />
+    <div class="container journal-shell py-4">
+        <header class="journal-header mb-4">
+            <div>
+                <p class="journal-kicker mb-2"><span class="journal-kicker-mark"></span> Eunomia <span
+                    class="kicker-divider">/</span> Personal media journal</p>
+                    <h1 class="journal-title mb-2">A good story stays with you.</h1>
+                    <p class="journal-intro mb-0">A considered record of what you watch, read, play, and return to.</p>
                 </div>
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <label class="form-label fw-semibold" for="category-filter">Category</label>
-
-                    <select id="category-filter" class="form-select" @bind="SelectedCategory">
-
-                        <option value="All">All categories</option>
-
-                        @foreach (var category in Categories)
-                        {
-                            <option value="@category">@category</option>
-                        }
-
-                    </select>
+                <div class="journal-stamp" aria-label="Personal archive, five categories">
+                    <span>PERSONAL</span>
+                    <strong>ARCHIVE</strong>
+                    <span>FIVE CATEGORIES</span>
                 </div>
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <label class="form-label fw-semibold" for="status-filter">Status</label>
+            </header>
 
-                    <select id="status-filter" class="form-select" @bind="SelectedStatus">
+            <section class="row g-3 mb-4" aria-label="Media activity summary">
+                <div class="col-sm-4">
+                    <button type="button" class="summary-tile summary-completed h-100 w-100 text-start"
+                            @onclick='() => SetStatusFilter("Completed")' aria-pressed="@(SelectedStatus == "Completed")">
+                        <span class="summary-index">01 / FINISHED</span>
+                        <span class="summary-label">Completed</span>
+                        <span class="summary-bottom"><strong class="summary-count">@CountByStatus("Completed")</strong><span
+                            class="summary-caption">items finished</span></span>
+                        </button>
+                    </div>
 
-                        <option value="All">All statuses</option>
+                    <div class="col-sm-4">
+                        <button type="button" class="summary-tile summary-current h-100 w-100 text-start"
+                                @onclick='() => SetStatusFilter("Currently Enjoying")'
+                                aria-pressed="@(SelectedStatus == "Currently Enjoying")">
+                            <span class="summary-index">02 / IN PROGRESS</span>
+                            <span class="summary-label">Currently enjoying</span>
+                            <span class="summary-bottom"><strong class="summary-count">@CountByStatus("Currently Enjoying")</strong><span class="summary-caption">in progress</span></span>
+                        </button>
+                    </div>
 
-                        @foreach (var status in Statuses)
-                        {
-                            <option value="@status">@status</option>
-                        }
+                    <div class="col-sm-4">
+                        <button type="button" class="summary-tile summary-queued h-100 w-100 text-start"
+                                @onclick='() => SetStatusFilter("Want to Try")' aria-pressed="@(SelectedStatus == "Want to Try")">
+                            <span class="summary-index">03 / ON THE LIST</span>
+                            <span class="summary-label">Want to try</span>
+                            <span class="summary-bottom"><strong class="summary-count">@CountByStatus("Want to Try")</strong><span
+                                class="summary-caption">saved for later</span></span>
+                            </button>
+                        </div>
+                    </section>
 
-                    </select>
-                </div>
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <label class="form-label fw-semibold" for="sort-order">Sort by</label>
+                    <section class="library-heading d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+                        <div>
+                            <p class="section-kicker mb-1">YOUR COLLECTION</p>
+                            <h2 class="library-title mb-1">The library</h2>
+                            <p class="text-secondary mb-0">@CurrentMediaItems.Count() titles, kept in one place</p>
+                        </div>
+                        <button class="btn btn-primary add-media-button" @onclick="NewMediaItem"><span aria-hidden="true">+</span> Add a
+                            title</button>
+                        </section>
 
-                    <select id="sort-order" class="form-select" @bind="SelectedSort">
-
-                        <option value="Title">Title</option>
-                        <option value="Rating">Rating</option>
-                        <option value="Recently added">Recently added</option>
-
-                    </select>
-                </div>
-        </div>
-    </section>
-
-    @if (FilteredMediaItems.Any())
-    {
-        <div class="row g-3">
-
-            @foreach (var item in FilteredMediaItems)
-            {
-                <div class="col-12 col-sm-6 col-xl-4">
-                    <article class="library-card h-100">
-                        <div class="library-card-body d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-
-                                <div>
-                                    <p class="category-label mb-2">@item.Category <span aria-hidden="true">/</span> #@item.Id.ToString("00")</p>
-                                    <h3 class="media-title mb-0">@item.Title</h3>
+                        <section class="filter-bar mb-4" aria-label="Search and filter media">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-12 col-sm-6 col-xl-3">
+                                    <label class="form-label fw-semibold" for="media-search">Search</label>
+                                    <input id="media-search" class="form-control" @bind="SearchTerm" @bind:event="oninput"
+                                           placeholder="Title or notes" />
                                 </div>
+                                <div class="col-12 col-sm-6 col-xl-3">
+                                    <label class="form-label fw-semibold" for="category-filter">Category</label>
 
-                                <span class="badge @StatusBadgeClass(item.Status)">
-                                    @item.Status
-                                </span>
+                                    <select id="category-filter" class="form-select" @bind="SelectedCategory">
 
+                                        <option value="All">All categories</option>
+
+                                        @foreach (var category in Categories)
+                                        {
+                                            <option value="@category">@category</option>
+                                        }
+
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-xl-3">
+                                    <label class="form-label fw-semibold" for="status-filter">Status</label>
+
+                                    <select id="status-filter" class="form-select" @bind="SelectedStatus">
+
+                                        <option value="All">All statuses</option>
+
+                                        @foreach (var status in Statuses)
+                                        {
+                                            <option value="@status">@status</option>
+                                        }
+
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-xl-3">
+                                    <label class="form-label fw-semibold" for="sort-order">Sort by</label>
+
+                                    <select id="sort-order" class="form-select" @bind="SelectedSort">
+
+                                        <option value="Title">Title</option>
+                                        <option value="Rating">Rating</option>
+                                        <option value="Recently added">Recently added</option>
+
+                                    </select>
+                                </div>
                             </div>
-                            <p class="media-rating mb-3">@(item.Rating is null ? "Not rated yet" : $"Rated {item.Rating} out of 10")</p>
-                            <label class="form-label small fw-semibold" for="status-@item.Id">Reading status</label>
-                            <select id="status-@item.Id" class="form-select form-select-sm mb-3" value="@item.Status" @onchange="args => UpdateStatus(item.Id, args)">
-                                @foreach (var status in Statuses)
+                        </section>
+
+                        @if (FilteredMediaItems.Any())
+                        {
+                            <div class="row g-3">
+
+                                @foreach (var item in FilteredMediaItems)
                                 {
-                                    <option value="@status">@status</option>
-                                }
+                                    <div class="col-12 col-sm-6 col-xl-4">
+                                        <article class="library-card h-100">
+                                            <div class="library-card-body d-flex flex-column">
+                                                <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
 
-                            </select>
-                            <div class="d-flex flex-wrap gap-2 mt-auto">
-                                <button class="btn btn-sm btn-outline-secondary" @onclick="() => ShowDetails(item.Id)">View details</button>
-                                <button class="btn btn-sm btn-outline-primary" @onclick="() => EditItem(item)">Edit details</button>
-                                <button class="btn btn-sm btn-outline-danger" @onclick="() => RequestDelete(item.Id)">Delete</button>
-                            </div>
+                                                    <div>
+                                                        <p class="category-label mb-2">@item.Category <span aria-hidden="true">/</span>
+                                                            #@item.Id.ToString("00")</p>
+                                                            <h3 class="media-title mb-0">@item.Title</h3>
+                                                        </div>
 
-                        </div>
+                                                        <span class="badge @StatusBadgeClass(item.Status)">
+                                                            @item.Status
+                                                        </span>
 
-                    </article>
+                                                    </div>
+                                                    <p class="media-rating mb-3">@(item.Rating is null ? "Not rated yet" : $"Rated {item.Rating} out of 10")</p>
+                                                    <label class="form-label small fw-semibold" for="status-@item.Id">Reading status</label>
+                                                    <select id="status-@item.Id" class="form-select form-select-sm mb-3" value="@item.Status"
+                                                            @onchange="args => UpdateStatus(item.Id, args)">
+                                                        @foreach (var status in Statuses)
+                                                        {
+                                                            <option value="@status">@status</option>
+                                                        }
 
-                </div>
-            }
+                                                    </select>
+                                                    <div class="d-flex flex-wrap gap-2 mt-auto">
+                                                        <button class="btn btn-sm btn-outline-secondary" @onclick="() => ShowDetails(item.Id)">View
+                                                            details</button>
+                                                            <button class="btn btn-sm btn-outline-primary" @onclick="() => EditItem(item)">Edit
+                                                                details</button>
+                                                                <button class="btn btn-sm btn-outline-danger"
+                                                                        @onclick="() => RequestDelete(item.Id)">Delete</button>
+                                                            </div>
 
-        </div>
-    }
+                                                        </div>
+
+                                                    </article>
+
+                                                </div>
+                                            }
+
+                                        </div>
+                                    }
     else
-    {
-        <div class="border rounded p-5 text-center">
+                                    {
+                                        <div class="border rounded p-5 text-center">
 
-            <h3 class="h5">No media found</h3>
+                                            <h3 class="h5">No media found</h3>
 
-            <p class="text-secondary mb-0">
-                Add a title or adjust your search and filters.
-            </p>
+                                            <p class="text-secondary mb-0">
+                                                Add a title or adjust your search and filters.
+                                            </p>
 
-        </div>
-    }
+                                        </div>
+                                    }
 
-    @if (SelectedItem is not null)
-    {
-        <div class="media-modal-backdrop">
-            <section class="media-modal" role="dialog" aria-modal="true" aria-labelledby="media-detail-title">
-                <div class="media-modal-header">
-                    <div>
-                        <p class="small text-uppercase text-secondary fw-semibold mb-1">@SelectedItem.Category</p>
-                        <h2 id="media-detail-title" class="h3 mb-0">@SelectedItem.Title</h2>
-                    </div>
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDetails" aria-label="Close details">Close</button>
-                </div>
-                <dl class="row media-detail-list">
-                    <dt class="col-sm-4">Status</dt>
-                    <dd class="col-sm-8"><span class="badge @StatusBadgeClass(SelectedItem.Status)">@SelectedItem.Status</span></dd>
-                    <dt class="col-sm-4">Rating</dt>
-                    <dd class="col-sm-8">@(SelectedItem.Rating is null ? "Not rated" : $"{SelectedItem.Rating}/10")</dd>
-                    <dt class="col-sm-4">Started</dt>
-                    <dd class="col-sm-8">@(SelectedItem.StartedOn?.ToString("MMM d, yyyy") ?? "Not set")</dd>
-                    <dt class="col-sm-4">Completed</dt>
-                    <dd class="col-sm-8">@(SelectedItem.CompletedOn?.ToString("MMM d, yyyy") ?? "Not set")</dd>
-                    <dt class="col-sm-4">Added</dt>
-                    <dd class="col-sm-8">@SelectedItem.DateAdded.ToString("MMM d, yyyy")</dd>
-                    <dt class="col-sm-4">Notes</dt>
-                    <dd class="col-sm-8 notes-value">@(string.IsNullOrWhiteSpace(SelectedItem.Notes) ? "No notes" : SelectedItem.Notes)</dd>
-                </dl>
-                <div class="d-flex flex-wrap gap-2">
-                    <button type="button" class="btn btn-primary" @onclick="EditSelectedItem">Edit item</button>
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDetails">Close</button>
-                </div>
-            </section>
-        </div>
-    }
+                                    @if (SelectedItem is not null)
+                                    {
+                                        <div class="media-modal-backdrop" @onkeydown="HandleModalKeyDown">
+                                            <section class="media-modal" role="dialog" aria-modal="true" aria-labelledby="media-detail-title">
+                                                <div class="media-modal-header">
+                                                    <div>
+                                                        <p class="small text-uppercase text-secondary fw-semibold mb-1">@SelectedItem.Category</p>
+                                                        <h2 id="media-detail-title" class="h3 mb-0">@SelectedItem.Title</h2>
+                                                    </div>
+                                                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDetails"
+                                                            aria-label="Close details">Close</button>
+                                                </div>
+                                                <dl class="row media-detail-list">
+                                                    <dt class="col-sm-4">Status</dt>
+                                                    <dd class="col-sm-8"><span
+                                                        class="badge @StatusBadgeClass(SelectedItem.Status)">@SelectedItem.Status</span></dd>
+                                                        <dt class="col-sm-4">Rating</dt>
+                                                        <dd class="col-sm-8">@(SelectedItem.Rating is null ? "Not rated" : $"{SelectedItem.Rating}/10")</dd>
+                                                        <dt class="col-sm-4">Started</dt>
+                                                        <dd class="col-sm-8">@(SelectedItem.StartedOn?.ToString("MMM d, yyyy") ?? "Not set")</dd>
+                                                        <dt class="col-sm-4">Completed</dt>
+                                                        <dd class="col-sm-8">@(SelectedItem.CompletedOn?.ToString("MMM d, yyyy") ?? "Not set")</dd>
+                                                        <dt class="col-sm-4">Added</dt>
+                                                        <dd class="col-sm-8">@SelectedItem.DateAdded.ToString("MMM d, yyyy")</dd>
+                                                        <dt class="col-sm-4">Notes</dt>
+                                                        <dd class="col-sm-8 notes-value">@(string.IsNullOrWhiteSpace(SelectedItem.Notes) ? "No notes" :
+                                                                                SelectedItem.Notes)</dd>
+                                                        </dl>
+                                                        <div class="d-flex flex-wrap gap-2">
+                                                            <button type="button" class="btn btn-primary" @onclick="EditSelectedItem">Edit item</button>
+                                                            <button type="button" class="btn btn-outline-secondary" @onclick="CloseDetails">Close</button>
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                            }
 
-    @if (IsEditing)
-    {
-        <div class="media-modal-backdrop">
-            <section class="media-modal" role="dialog" aria-modal="true" aria-labelledby="media-editor-title">
-                <div class="media-modal-header">
-                    <h2 id="media-editor-title" class="h4 mb-0">@(EditingItem.Id == 0 ? "Add to your library" : $"Edit {EditingItem.Title}")</h2>
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelEdit" aria-label="Close editor">Close</button>
-                </div>
-                <EditForm Model="EditingItem" OnValidSubmit="SaveItem">
+                                            @if (IsEditing)
+                                            {
+                                                <div class="media-modal-backdrop" @onkeydown="HandleModalKeyDown">
+                                                    <section class="media-modal" role="dialog" aria-modal="true" aria-labelledby="media-editor-title">
+                                                        <div class="media-modal-header">
+                                                            <h2 id="media-editor-title" class="h4 mb-0">@(EditingItem.Id == 0 ? "Add to your library" : $"Edit             {EditingItem.Title}")</h2>
+                                                            <button type="button" class="btn btn-outline-secondary" @onclick="CancelEdit"
+                                                                    aria-label="Close editor">Close</button>
+                                                        </div>
+                                                        <EditForm Model="EditingItem" OnValidSubmit="SaveItem">
 
-                    <DataAnnotationsValidator />
+                                                            <DataAnnotationsValidator />
 
-                    <ValidationSummary class="text-danger mb-3" />
+                                                            <ValidationSummary class="text-danger mb-3" />
 
-                    <div class="row g-3">
+                                                            <div class="row g-3">
 
-                        <div class="col-md-6">
+                                                                <div class="col-md-6">
 
-                            <label class="form-label" for="item-title">
-                                Title
-                            </label>
+                                                                    <label class="form-label" for="item-title">
+                                                                        Title
+                                                                    </label>
 
-                            <InputText id="item-title" class="form-control" @bind-Value="EditingItem.Title" />
+                                                                    <InputText id="item-title" class="form-control" @bind-Value="EditingItem.Title" />
 
-                            <ValidationMessage For="@(() => EditingItem.Title)" class="text-danger" />
+                                                                    <ValidationMessage For="@(() => EditingItem.Title)" class="text-danger" />
 
-                        </div>
+                                                                </div>
 
-                        <div class="col-md-3">
+                                                                <div class="col-md-3">
 
-                            <label class="form-label" for="item-category">
-                                Category
-                            </label>
+                                                                    <label class="form-label" for="item-category">
+                                                                        Category
+                                                                    </label>
 
-                            <InputSelect id="item-category" class="form-select" @bind-Value="EditingItem.Category">
+                                                                    <InputSelect id="item-category" class="form-select" @bind-Value="EditingItem.Category">
 
-                                @foreach (var category in Categories)
-                                {
-                                    <option value="@category">
-                                        @category
-                                    </option>
-                                }
+                                                                        @foreach (var category in Categories)
+                                                                        {
+                                                                            <option value="@category">
+                                                                                @category
+                                                                            </option>
+                                                                        }
 
-                            </InputSelect>
+                                                                    </InputSelect>
 
-                        </div>
+                                                                </div>
 
-                        <div class="col-md-3">
+                                                                <div class="col-md-3">
 
-                            <label class="form-label" for="item-status">
-                                Status
-                            </label>
+                                                                    <label class="form-label" for="item-status">
+                                                                        Status
+                                                                    </label>
 
-                            <InputSelect id="item-status" class="form-select" @bind-Value="EditingItem.Status">
+                                                                    <InputSelect id="item-status" class="form-select" @bind-Value="EditingItem.Status">
 
-                                @foreach (var status in Statuses)
-                                {
-                                    <option value="@status">
-                                        @status
-                                    </option>
-                                }
+                                                                        @foreach (var status in Statuses)
+                                                                        {
+                                                                            <option value="@status">
+                                                                                @status
+                                                                            </option>
+                                                                        }
 
-                            </InputSelect>
+                                                                    </InputSelect>
 
-                        </div>
+                                                                </div>
 
-                        <div class="col-md-4">
+                                                                <div class="col-md-4">
 
-                            <label class="form-label" for="item-rating">
-                                Rating (1-10)
-                            </label>
+                                                                    <label class="form-label" for="item-rating">
+                                                                        Rating (1-10)
+                                                                    </label>
 
-                            <InputNumber id="item-rating" class="form-control" @bind-Value="EditingItem.Rating" min="1"
-                                         max="10" />
+                                                                    <InputNumber id="item-rating" class="form-control" @bind-Value="EditingItem.Rating" min="1"
+                                                                                 max="10" />
 
-                            <ValidationMessage For="@(() => EditingItem.Rating)" class="text-danger" />
+                                                                    <ValidationMessage For="@(() => EditingItem.Rating)" class="text-danger" />
 
-                        </div>
+                                                                </div>
 
-                        <div class="col-md-4">
+                                                                <div class="col-md-4">
 
-                            <label class="form-label" for="item-started">
-                                Start date
-                            </label>
+                                                                    <label class="form-label" for="item-started">
+                                                                        Start date
+                                                                    </label>
 
-                            <InputDate id="item-started" class="form-control" @bind-Value="EditingItem.StartedOn" />
+                                                                    <InputDate id="item-started" class="form-control" @bind-Value="EditingItem.StartedOn" />
 
-                        </div>
+                                                                </div>
 
-                        <div class="col-md-4">
+                                                                <div class="col-md-4">
 
-                            <label class="form-label" for="item-completed">
-                                Completion date
-                            </label>
+                                                                    <label class="form-label" for="item-completed">
+                                                                        Completion date
+                                                                    </label>
 
-                            <InputDate id="item-completed" class="form-control" @bind-Value="EditingItem.CompletedOn" />
+                                                                    <InputDate id="item-completed" class="form-control" @bind-Value="EditingItem.CompletedOn" />
 
-                        </div>
+                                                                </div>
 
-                        <div class="col-12">
+                                                                <div class="col-12">
 
-                            <label class="form-label" for="item-notes">
-                                Notes
-                            </label>
+                                                                    <label class="form-label" for="item-notes">
+                                                                        Notes
+                                                                    </label>
 
-                            <InputTextArea id="item-notes" class="form-control" @bind-Value="EditingItem.Notes" rows="3" />
+                                                                    <InputTextArea id="item-notes" class="form-control" @bind-Value="EditingItem.Notes" rows="3" />
 
-                            <ValidationMessage For="@(() => EditingItem.Notes)" class="text-danger" />
+                                                                    <ValidationMessage For="@(() => EditingItem.Notes)" class="text-danger" />
 
-                        </div>
+                                                                </div>
 
-                    </div>
+                                                            </div>
 
-                    <div class="d-flex gap-2 mt-4">
+                                                            <div class="d-flex gap-2 mt-4">
 
-                        <button type="submit" class="btn btn-primary">
-                            Save item
-                        </button>
+                                                                <button type="submit" class="btn btn-primary">
+                                                                    Save item
+                                                                </button>
 
-                        <button type="button" class="btn btn-outline-secondary" @onclick="CancelEdit">
-                            Cancel
-                        </button>
+                                                                <button type="button" class="btn btn-outline-secondary" @onclick="CancelEdit">
+                                                                    Cancel
+                                                                </button>
 
-                    </div>
+                                                            </div>
 
-                </EditForm>
-            </section>
-        </div>
-    }
+                                                        </EditForm>
+                                                    </section>
+                                                </div>
+                                            }
 
-    @if (PendingDeleteItem is not null)
-    {
-        <div class="media-modal-backdrop">
-            <section class="media-modal media-confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-confirm-title">
-                <h2 id="delete-confirm-title" class="h4">Remove this item?</h2>
-                <p>“@PendingDeleteItem.Title” will be removed from your library.</p>
-                <div class="d-flex flex-wrap gap-2">
-                    <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Remove item</button>
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">Cancel</button>
-                </div>
-            </section>
-        </div>
-    }
+                                            @if (PendingDeleteItem is not null)
+                                            {
+                                                <div class="media-modal-backdrop" @onkeydown="HandleModalKeyDown">
+                                                    <section class="media-modal media-confirm-modal" role="alertdialog" aria-modal="true"
+                                                             aria-labelledby="delete-confirm-title">
+                                                        <h2 id="delete-confirm-title" class="h4">Remove this item?</h2>
+                                                        <p>“@PendingDeleteItem.Title” will be removed from your library.</p>
+                                                        <div class="d-flex flex-wrap gap-2">
+                                                            <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Remove item</button>
+                                                            <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">Cancel</button>
+                                                        </div>
+                                                    </section>
+                                                </div>
+                                            }
 
-    <section class="border-top mt-5 pt-4">
+                                            <section class="border-top mt-5 pt-4">
 
-        <div class="row g-3 align-items-end">
+                                                <div class="row g-3 align-items-end">
 
-            <div class="col-md-6">
+                                                    <div class="col-md-6">
 
-                <label class="form-label fw-semibold" for="active-account">
-                    Personal collection
-                </label>
+                                                        <label class="form-label fw-semibold" for="active-account">
+                                                            Personal collection
+                                                        </label>
 
-                <select id="active-account" class="form-select" value="@CurrentUser.Id" @onchange="SwitchAccount">
+                                                        <select id="active-account" class="form-select" value="@CurrentUser.Id" @onchange="SwitchAccount">
 
-                    @foreach (var account in Accounts)
-                    {
-                        <option value="@account.Id">
-                            @account.Name (@account.Email)
-                        </option>
-                    }
+                                                            @foreach (var account in Accounts)
+                                                            {
+                                                                <option value="@account.Id">
+                                                                    @account.Name (@account.Email)
+                                                                </option>
+                                                            }
 
-                </select>
+                                                        </select>
 
-            </div>
+                                                    </div>
 
-            <div class="col-md-6 d-flex flex-wrap gap-2">
-                <a href="login" class="btn btn-outline-primary">Sign in with an account</a>
-                <a href="register" class="btn btn-primary">+ Register new user</a>
-            </div>
+                                                    <div class="col-md-6 d-flex flex-wrap gap-2">
+                                                        <a href="login" class="btn btn-outline-primary">Sign in with an account</a>
+                                                        <a href="register" class="btn btn-primary">+ Register new user</a>
+                                                    </div>
 
-        </div>
+                                                </div>
 
-        <div class="mt-3">
-            <p class="small text-secondary mb-0">
-                <span class="text-success fw-bold">● Database Connected:</span> All accounts and credentials are saved in PostgreSQL with secure BCrypt password hashing.
-            </p>
-        </div>
+                                                <div class="mt-3">
+                                                    <p class="small text-secondary mb-0">
+                                                        <span class="text-success fw-bold">● Database Connected:</span> All accounts and credentials are saved
+                                                        in PostgreSQL with secure BCrypt password hashing.
+                                                    </p>
+                                                </div>
 
-    </section>
+                                            </section>
 
-</div>
-}
+                                        </div>
+                                    }
 
 @code {
 
@@ -474,8 +493,10 @@ else
         }
     }
 
-    private MediaItem? SelectedItem => MediaItems.FirstOrDefault(item => item.Id == SelectedItemId && item.UserId == CurrentUserId);
-    private MediaItem? PendingDeleteItem => MediaItems.FirstOrDefault(item => item.Id == PendingDeleteItemId && item.UserId == CurrentUserId);
+    private MediaItem? SelectedItem => MediaItems.FirstOrDefault(item => item.Id == SelectedItemId && item.UserId ==
+CurrentUserId);
+    private MediaItem? PendingDeleteItem => MediaItems.FirstOrDefault(item => item.Id == PendingDeleteItemId && item.UserId
+== CurrentUserId);
 
     private List<MediaItem> MediaItems = new();
 
@@ -626,6 +647,28 @@ else
     }
 
     private void CancelDelete() => PendingDeleteItemId = null;
+
+    // Dismiss the active modal when Escape is pressed within it.
+    private void HandleModalKeyDown(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs args)
+    {
+        if (args.Key != "Escape")
+        {
+            return;
+        }
+
+        if (PendingDeleteItemId is not null)
+        {
+            CancelDelete();
+        }
+        else if (IsEditing)
+        {
+            CancelEdit();
+        }
+        else if (SelectedItemId is not null)
+        {
+            CloseDetails();
+        }
+    }
 
     private void CancelEdit()
     {
